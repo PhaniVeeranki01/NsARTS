@@ -38,9 +38,18 @@ const books: Product[] = [
 
 const money = (price?: number) => price ? `₹${price.toLocaleString("en-IN")}` : "Price on request";
 const whatsapp = (message: string) => `https://wa.me/919492297916?text=${encodeURIComponent(message)}`;
+const productWhatsapp = (product: Product) => whatsapp([
+  "Hello Ns ARTS, I would like a quote for this product:",
+  "",
+  `Product: ${product.title}`,
+  `Code: ${product.code}`,
+  `Type: ${product.detail}`,
+  `Price: ${money(product.price)}`,
+  `Product image: https://nsarts.in${product.image}`,
+].join("\n"));
 
 function ProductCard({ product, active, onFavourite, onView }: { product: Product; active: boolean; onFavourite: () => void; onView: () => void }) {
-  const quoteUrl = whatsapp(`Hello Ns ARTS, I would like a quote for ${product.title} (${product.code}).`);
+  const quoteUrl = productWhatsapp(product);
   return <article className="product-card">
     <div className="product-image">
       <button className="view-trigger" onClick={onView} aria-label={`View ${product.title}`}><img src={product.image} alt={`${product.title} by Ns ARTS`} loading="lazy"/></button>
@@ -79,7 +88,7 @@ export default function Home() {
     <section className="quote-banner" id="contact"><div className="shell"><p className="kicker">Contact us</p><h2>Found something<br/>that <i>speaks to you?</i></h2><p>Tell us which piece you love. We’ll share availability, dimensions, ordering, and delivery details personally.</p><a className="contact-number" href="tel:+919492297916">+91 94922 97916</a><div className="contact-actions"><button className="button artist-button" onClick={() => setArtistOpen(true)}>Meet the artist <span>↗</span></button><a className="button button-light" href={whatsapp("Hello Ns ARTS, I would like to request a quote.")} target="_blank" rel="noreferrer">Request on WhatsApp <span>↗</span></a></div></div></section>
     <footer><div className="shell footer-top"><div className="brand"><span>Ns</span> ARTS</div><p><a href="tel:+919492297916">Contact us · +91 94922 97916</a></p><div><button className="footer-artist" onClick={() => setArtistOpen(true)}>Meet the Artist</button><a href="https://www.instagram.com/ns_art_gallery._?igsh=MWxlZm1hcXZya29jbg==" target="_blank" rel="noreferrer">Instagram</a><a href={whatsapp("Hello Ns ARTS, I would like to request a quote.")} target="_blank" rel="noreferrer">WhatsApp</a></div></div><div className="shell footer-bottom"><small>© 2026 Ns ARTS. All works reserved.</small><a href="https://www.instagram.com/ns_art_gallery._?igsh=MWxlZm1hcXZya29jbg==" target="_blank" rel="noreferrer">@ns_art_gallery._ ↗</a><a href="#top">Back to top ↑</a></div></footer>
 
-    {selected && <div className="product-modal" role="dialog" aria-modal="true" aria-label={selected.title} onClick={() => setSelected(null)}><div className="modal-panel" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)} aria-label="Close product view">×</button><div className="modal-image"><img src={selected.image} alt={selected.title}/></div><div className="modal-copy"><p className="kicker">{selected.code}</p><h2>{selected.title}</h2><p className="modal-detail">{selected.detail}</p><strong>{money(selected.price)}</strong><p>Made by Ns ARTS. Contact us for availability, custom requests, and delivery details.</p><button className={`modal-favourite ${favourites.includes(selected.id) ? "active" : ""}`} onClick={() => toggleFavourite(selected.id)}>{favourites.includes(selected.id) ? "♥ Saved to favourites" : "♡ Add to favourites"}</button><a className="button button-dark" href={whatsapp(`Hello Ns ARTS, I would like a quote for ${selected.title} (${selected.code}).`)} target="_blank" rel="noreferrer">Request on WhatsApp <span>↗</span></a></div></div></div>}
+    {selected && <div className="product-modal" role="dialog" aria-modal="true" aria-label={selected.title} onClick={() => setSelected(null)}><div className="modal-panel" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelected(null)} aria-label="Close product view">×</button><div className="modal-image"><img src={selected.image} alt={selected.title}/></div><div className="modal-copy"><p className="kicker">{selected.code}</p><h2>{selected.title}</h2><p className="modal-detail">{selected.detail}</p><strong>{money(selected.price)}</strong><p>Made by Ns ARTS. Contact us for availability, custom requests, and delivery details.</p><button className={`modal-favourite ${favourites.includes(selected.id) ? "active" : ""}`} onClick={() => toggleFavourite(selected.id)}>{favourites.includes(selected.id) ? "♥ Saved to favourites" : "♡ Add to favourites"}</button><a className="button button-dark" href={productWhatsapp(selected)} target="_blank" rel="noreferrer">Request on WhatsApp <span>↗</span></a></div></div></div>}
     {artistOpen && <div className="artist-modal" role="dialog" aria-modal="true" aria-label="Meet the artist Venkat" onClick={() => setArtistOpen(false)}><div className="artist-card" onClick={(event) => event.stopPropagation()}><button className="artist-close" onClick={() => setArtistOpen(false)} aria-label="Close artist profile">×</button><p className="kicker">Hello, it’s me</p><h2>VENKAT</h2><p className="artist-role">Oil Artist</p><p className="artist-lead">I transform emotions into timeless artworks, blending realism, creativity, and imagination through every stroke and detail.</p><p>Each creation tells a story—crafted with passion, precision, and soul.</p><a className="button button-light" href={whatsapp("Hello Venkat, I would like to know more about your artwork.")} target="_blank" rel="noreferrer">Chat on WhatsApp <span>↗</span></a></div></div>}
   </main>;
 }
